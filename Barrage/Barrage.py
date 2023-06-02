@@ -1,21 +1,19 @@
 import math
-import time
 import random
-import pygame
+import time
 import tkinter.messagebox
+
+import pygame
 
 
 def settings():
     def center_text(event):
         global focus, text_dic
-        text = text_dic[(focus, 1)].get("1.0", "end-1")
-
-        if text.isdigit():
-            text_dic[(focus, 1)].tag_remove("center", "1.0", "end")
-            text_dic[(focus, 1)].tag_add("center", "1.0", "end")
-            text_dic[(focus, 1)].tag_configure("center", justify='center')
-        else:
+        text = text_dic[(focus, 1)].get("1.0", "end")[:-1]
+        if not text.isdigit():
             text_dic[(focus, 1)].delete("end-2c")
+        text_dic[(focus, 1)].tag_add("center", "1.0", "end")
+        text_dic[(focus, 1)].tag_configure("center", justify="center")
 
     def handle_focus(event):
         global focus, text_dic
@@ -48,7 +46,7 @@ def settings():
     def close():
         init_list = list()
         for y_close in range(4):
-            text = int(text_dic[(y_close, 1)].get("1.0", "end-1"))
+            text = int(text_dic[(y_close, 1)].get("1.0", "end")[:-1])
             if y_close in [0, 1] and text < 100:
                 tkinter.messagebox.showinfo(message="窗口边长不小于100!")
                 return False
@@ -66,7 +64,7 @@ def settings():
     root = tkinter.Tk()
     focus = -1
     width, height = root.maxsize()
-    root.geometry("215x253+" + str(int(width / 2.4)) + "+" + str(int(height / 3)))
+    root.geometry(f"{215}x{253}+{int(width / 2.4)}+{int(height / 3)}")
     root.title("Setting")
     root.resizable(False, False)
     root.bind("<FocusIn>", handle_focus)
@@ -86,7 +84,7 @@ def settings():
     text_dic[(3, 1)].insert("1.0", "50")
     for i in range(4):
         text_dic[(i, 1)].tag_add("center", "1.0", "end")
-        text_dic[(i, 1)].tag_configure("center", justify='center')
+        text_dic[(i, 1)].tag_configure("center", justify="center")
     button_collision = tkinter.Button(root, text="开启", command=button_c, width=6, height=0, font="宋体 22")
     button_collision.grid(row=4, column=1)
     button_invincible = tkinter.Button(root, text="开启", command=button_i, width=6, height=0, font="宋体 22")
@@ -302,7 +300,7 @@ class Music:
         pygame.mixer.music.play(-1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     focus = 0
     text_dic = dict()
     settings()
