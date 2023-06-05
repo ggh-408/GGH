@@ -33,6 +33,7 @@ def main():
         txt.delete("1.0", "end")
         for r in range(9):
             for c in range(9):
+                dic[(r, c)].config(state=tkinter.NORMAL)
                 dic[(r, c)].delete("1.0", "end")
                 if demo_copy[r][c]:
                     dic[(r, c)].config(fg="slategrey")
@@ -53,7 +54,10 @@ def main():
     demo, t = sudo_solve(demo)
     if demo:
         output()
-        time_label.config(text=f"{1000 * t:.1f}ms")
+        if t >= 0.1:
+            time_label.config(text=f"{t:.1f}s")
+        else:
+            time_label.config(text=f"{1000 * t:.1f}ms")
     else:
         tkinter.messagebox.showinfo(message="输入数独错误！", type=None)
     button_start.config(state=tkinter.NORMAL)
