@@ -2,7 +2,7 @@ import copy
 import tkinter.filedialog
 import tkinter.messagebox
 
-from sudoku_DFS import sudo_solve
+from sudoku_dfs import sudo_solve
 from opencv.opencv import open_cv
 
 
