@@ -1,2 +1,2 @@
 # ggh
-It is a personal item, just for fun.
+It's a personal project, just for fun
