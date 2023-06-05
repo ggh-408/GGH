@@ -97,7 +97,7 @@ def sudo_solve(sudo):
 
     def get_cache():
         keys = [[-1, -1, -1]]
-        values = [[0, 0, 0]]
+        values = [[-1, -1, -1]]
         for r in range(9):
             for c in range(9):
                 if not sudo[r][c]:
