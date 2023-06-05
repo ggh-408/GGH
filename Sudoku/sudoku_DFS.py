@@ -83,12 +83,12 @@ def sudo_solve(sudo):
             for r in range(9):
                 for c in range(9):
                     if not sudo[r][c]:
-                        for number_only in range(1, 10):
-                            if legal(number_only, r, c):
+                        for number in range(1, 10):
+                            if legal(number, r, c):
                                 if same_number:
                                     same_number = False
                                     break
-                                sign_number = number_only
+                                sign_number = number
                                 same_number = True
                         if same_number:
                             key = True
