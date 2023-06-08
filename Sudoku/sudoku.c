@@ -3,28 +3,28 @@
 #include <time.h>
 
 
-int sudo[9][9] = {
-    {8, 0, 0, 0, 0, 0, 0, 0, 9},
-    {0, 0, 3, 6, 0, 0, 0, 0, 0},
-    {0, 7, 0, 0, 9, 0, 2, 0, 0},
-    {0, 5, 0, 0, 0, 7, 0, 0, 0},
-    {0, 0, 0, 0, 4, 5, 7, 0, 0},
-    {0, 0, 0, 1, 0, 0, 0, 3, 0},
-    {0, 0, 1, 0, 0, 0, 0, 6, 8},
-    {0, 0, 8, 5, 0, 0, 0, 1, 0},
-    {0, 9, 0, 0, 0, 0, 4, 0, 0},
-};
 // int sudo[9][9] = {
-//     {0, 0, 0, 0, 0, 0, 0, 0, 0},
-//     {0, 0, 0, 0, 0, 3, 0, 8, 5},
-//     {0, 0, 1, 0, 2, 0, 0, 0, 0},
-//     {0, 0, 0, 5, 0, 7, 0, 0, 0},
-//     {0, 0, 4, 0, 0, 0, 1, 0, 0},
-//     {0, 9, 0, 0, 0, 0, 0, 0, 0},
-//     {5, 0, 0, 0, 0, 0, 0, 7, 3},
-//     {0, 0, 2, 0, 1, 0, 0, 0, 0},
-//     {0, 0, 0, 0, 4, 0, 0, 0, 9},
+//     {8, 0, 0, 0, 0, 0, 0, 0, 9},
+//     {0, 0, 3, 6, 0, 0, 0, 0, 0},
+//     {0, 7, 0, 0, 9, 0, 2, 0, 0},
+//     {0, 5, 0, 0, 0, 7, 0, 0, 0},
+//     {0, 0, 0, 0, 4, 5, 7, 0, 0},
+//     {0, 0, 0, 1, 0, 0, 0, 3, 0},
+//     {0, 0, 1, 0, 0, 0, 0, 6, 8},
+//     {0, 0, 8, 5, 0, 0, 0, 1, 0},
+//     {0, 9, 0, 0, 0, 0, 4, 0, 0},
 // };
+int sudo[9][9] = {
+    {0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 3, 0, 8, 5},
+    {0, 0, 1, 0, 2, 0, 0, 0, 0},
+    {0, 0, 0, 5, 0, 7, 0, 0, 0},
+    {0, 0, 4, 0, 0, 0, 1, 0, 0},
+    {0, 9, 0, 0, 0, 0, 0, 0, 0},
+    {5, 0, 0, 0, 0, 0, 0, 7, 3},
+    {0, 0, 2, 0, 1, 0, 0, 0, 0},
+    {0, 0, 0, 0, 4, 0, 0, 0, 9},
+};
 // int sudo[9][9] = {
 //     {1, 0, 0, 4, 0, 0, 8, 0, 0},
 //     {0, 4, 0, 0, 3, 0, 0, 0, 9},
@@ -36,39 +36,36 @@ int sudo[9][9] = {
 //     {7, 0, 0, 8, 0, 0, 0, 0, 4},
 //     {0, 2, 0, 0, 0, 4, 0, 8, 0},
 // };
-
+// int sudo[9][9] = {
+//     {0, 0, 0, 0, 0, 3, 0, 1, 7},
+//     {0, 1, 5, 0, 0, 9, 0, 0, 8},
+//     {0, 6, 0, 0, 0, 0, 0, 0, 0},
+//     {1, 0, 0, 0, 0, 7, 0, 0, 0},
+//     {0, 0, 9, 0, 0, 0, 2, 0, 0},
+//     {0, 0, 0, 5, 0, 0, 0, 0, 4},
+//     {0, 0, 0, 0, 0, 0, 0, 2, 0},
+//     {5, 0, 0, 6, 0, 0, 3, 4, 0},
+//     {3, 4, 0, 2, 0, 0, 0, 0, 0},
+// };
 int cacheValues[82][10], cacheKeys[82][3], coordinate;
 bool legalR[10][9];
 bool legalC[10][9];
 bool legalB[10][9];
 
-bool Legal(int value, int row, int col)
-{
-    for (int rc = 0; rc <= 8; rc++) {
-        if (sudo[rc][col] == value || sudo[row][rc] == value) {
-            return false;
-        }
-    }
-    for (int r = 3*(row/3); r <= 3*(row/3)+2; r++) {
-        for (int c = 3*(col/3); c <= 3*(col/3)+2; c++) {
-            if (sudo[r][c] == value){
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
 bool Check(void)
 {
-    int tmp;
+    int value, b;
     for (int r = 0; r <= 8; r++) {
         for (int c = 0; c <= 8; c++) {
             if (sudo[r][c]) {
-                tmp = sudo[r][c];
+                b = 3 * (r / 3) + c / 3;
+                value = sudo[r][c];
                 sudo[r][c] = 0;
-                if (Legal(tmp, r, c)) {
-                    sudo[r][c] = tmp;
+                if (legalR[r][value] && legalC[c][value] && legalB[b][value]) {
+                    sudo[r][c] = value;
+                    legalR[r][value] = false;
+                    legalC[c][value] = false;
+                    legalB[b][value] = false;
                 } else {
                     return false;
                 }
@@ -81,7 +78,7 @@ bool Check(void)
 void Fill(void)
 {
     bool key = true, sameNumber = false;
-    int signNumber = 0, signR = 0, signC = 0;
+    int signNumber, signR, signC, signB, b;
     while (key) {
         key = false;
         for (int number = 1; number <= 9; number++) {
@@ -89,13 +86,15 @@ void Fill(void)
             for (int r = 0; r <= 8; r++) {
                 for (int c = 0; c <= 8; c++) {
                     // Row
-                    if (!sudo[r][c] && Legal(number, r, c)) {
+                    b = 3 * (r / 3) + c / 3;
+                    if (!sudo[r][c] && legalR[r][number] && legalC[c][number] && legalB[b][number]) {
                         if (sameNumber) {
                             sameNumber = false;
                             break;
                         }
                         signR = r;
                         signC = c;
+                        signB = b;
                         sameNumber = true;
                     }
                 }
@@ -103,16 +102,21 @@ void Fill(void)
                     key = true;
                     sameNumber = false;
                     sudo[signR][signC] = number;
+                    legalR[signR][number] = false;
+                    legalC[signC][number] = false;
+                    legalB[signB][number] = false;
                 }
                 // Column
                 for (int c = 0; c <= 8; c++) {
-                    if (!sudo[c][r] && Legal(number, c, r)) {
+                    b = 3 * (c / 3) + r / 3;
+                    if (!sudo[c][r] && legalR[c][number] && legalC[r][number] && legalB[b][number]) {
                         if (sameNumber) {
                             sameNumber = false;
                             break;
                         }
                         signR = c;
                         signC = r;
+                        signB = b;
                         sameNumber = true;
                     }
                 }
@@ -120,6 +124,9 @@ void Fill(void)
                     key = true;
                     sameNumber = false;
                     sudo[signR][signC] = number;
+                    legalR[signR][number] = false;
+                    legalC[signC][number] = false;
+                    legalB[signB][number] = false;
                 }
             }
             // Block
@@ -127,13 +134,15 @@ void Fill(void)
                 for (int bloC = 0; bloC <= 6; bloC += 3) {
                     for (int r = bloR;r <= bloR+2 && sameNumber; r++) {
                         for (int c = bloC; c <= bloC+2; c++) {
-                            if (!sudo[r][c] && Legal(number, r, c)) {
+                            b = 3 * (r / 3) + c / 3;
+                            if (!sudo[r][c] && legalR[r][number] && legalC[c][number] && legalB[b][number]) {
                                 if (sameNumber) {
                                     sameNumber = false;
                                     break;
                                 }
                                 signR = r;
                                 signC = c;
+                                signB = b;
                                 sameNumber = true;
                             }
                         }
@@ -142,6 +151,9 @@ void Fill(void)
                         key = true;
                         sameNumber = false;
                         sudo[signR][signC] = number;
+                        legalR[signR][number] = false;
+                        legalC[signC][number] = false;
+                        legalB[signB][number] = false;
                     }
                 }
             }
@@ -151,8 +163,9 @@ void Fill(void)
         for (int r = 0; r <= 8; r++) {
             for (int c = 0; c <= 8; c++) {
                 if (!sudo[r][c]) {
+                    b = 3 * (r / 3) + c / 3;
                     for (int number = 1; number <= 9; number++) {
-                        if (Legal(number, r, c)) {
+                        if (legalR[r][number] && legalC[c][number] && legalB[b][number]) {
                             if (sameNumber) {
                                 sameNumber = false;
                                 break;
@@ -165,6 +178,9 @@ void Fill(void)
                         key = true;
                         sameNumber = false;
                         sudo[r][c] = signNumber;
+                        legalR[r][signNumber] = false;
+                        legalC[c][signNumber] = false;
+                        legalB[b][signNumber] = false;
                     }
                 }
             }
@@ -174,7 +190,7 @@ void Fill(void)
 
 void getCache(void)
 {
-    int valuesSize;
+    int valuesSize, b;
     //Get all legal values
     coordinate = 0;
     for (int r = 0; r <= 8; r++) {
@@ -182,11 +198,12 @@ void getCache(void)
             if (!sudo[r][c]) {
                 valuesSize = 0;
                 coordinate++;
+                b = 3 * (r / 3) + c / 3;
                 cacheKeys[coordinate][0] = r;
                 cacheKeys[coordinate][1] = c;
-                cacheKeys[coordinate][2] = 3 * (r / 3) + c / 3;
+                cacheKeys[coordinate][2] = b;
                 for (int number = 1; number <= 9; number++) {
-                    if (Legal(number, r, c)) {
+                    if (legalR[r][number] && legalC[c][number] && legalB[b][number]) {
                         cacheValues[coordinate][valuesSize] = number;
                         valuesSize++;
                     }
