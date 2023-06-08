@@ -2,26 +2,19 @@ import time
 
 
 def sudo_solve(sudo):
-    def legal(number, row, col):
-        for rc in range(9):
-            if sudo[row][rc] == number or sudo[rc][col] == number:
-                return False
-
-        for bol_r in range(3 * (row // 3), 3 * (row // 3) + 3):
-            for blo_c in range(3 * (col // 3), 3 * (col // 3) + 3):
-                if sudo[bol_r][blo_c] == number:
-                    return False
-
-        return True
-
     def check():
+        nonlocal legal_r, legal_c, legal_b
         for r in range(9):
             for c in range(9):
                 if sudo[r][c]:
-                    tmp = sudo[r][c]
+                    b = 3 * (r // 3) + c // 3
+                    value = sudo[r][c]
                     sudo[r][c] = 0
-                    if legal(tmp, r, c):
-                        sudo[r][c] = tmp
+                    if legal_r[r][value] and legal_c[c][value] and legal_b[b][value]:
+                        sudo[r][c] = value
+                        legal_r[r][value] = False
+                        legal_c[c][value] = False
+                        legal_b[b][value] = False
                     else:
                         return False
         return True
@@ -30,48 +23,60 @@ def sudo_solve(sudo):
         key = True
         flag = False
         same_number = False
-        sign_r, sign_c = 0, 0
+        sign_r, sign_c, sign_b = 0, 0, 0
         sign_number = 0
         while key:
             key = False
             for number in range(1, 10):
                 for r in range(9):
                     for c in range(9):
-                        if not sudo[r][c] and legal(number, r, c):
+                        b = 3 * (r // 3) + c // 3
+                        if not sudo[r][c] and legal_r[r][number] and legal_c[c][number] and legal_b[b][number]:
                             if same_number:
                                 same_number = False
                                 break
                             sign_r = r
                             sign_c = c
+                            sign_b = b
                             same_number = True
                     if same_number:
                         key = True
                         same_number = False
                         sudo[sign_r][sign_c] = number
+                        legal_r[sign_r][number] = False
+                        legal_c[sign_c][number] = False
+                        legal_b[sign_b][number] = False
                     for c in range(9):
-                        if not sudo[c][r] and legal(number, c, r):
+                        b = 3 * (c // 3) + r // 3
+                        if not sudo[c][r] and legal_r[c][number] and legal_c[r][number] and legal_b[b][number]:
                             if same_number:
                                 same_number = False
                                 break
                             sign_r = c
                             sign_c = r
+                            sign_b = b
                             same_number = True
                     if same_number:
                         key = True
                         same_number = False
                         sudo[sign_r][sign_c] = number
+                        legal_r[sign_r][number] = False
+                        legal_c[sign_c][number] = False
+                        legal_b[sign_b][number] = False
 
                 for blo_r in range(0, 9, 3):
                     for blo_c in range(0, 9, 3):
                         for r in range(blo_r, blo_r + 3):
                             for c in range(blo_c, blo_c + 3):
-                                if not sudo[r][c] and legal(number, r, c):
+                                b = 3 * (r // 3) + c // 3
+                                if not sudo[r][c] and legal_r[r][number] and legal_c[c][number] and legal_b[b][number]:
                                     if same_number:
                                         same_number = False
                                         flag = True
                                         break
                                     sign_r = r
                                     sign_c = c
+                                    sign_b = b
                                     same_number = True
                             if flag:
                                 flag = False
@@ -80,11 +85,15 @@ def sudo_solve(sudo):
                             key = True
                             same_number = False
                             sudo[sign_r][sign_c] = number
+                            legal_r[sign_r][number] = False
+                            legal_c[sign_c][number] = False
+                            legal_b[sign_b][number] = False
             for r in range(9):
                 for c in range(9):
                     if not sudo[r][c]:
+                        b = 3 * (r // 3) + c // 3
                         for number in range(1, 10):
-                            if legal(number, r, c):
+                            if legal_r[r][number] and legal_c[c][number] and legal_b[b][number]:
                                 if same_number:
                                     same_number = False
                                     break
@@ -94,6 +103,9 @@ def sudo_solve(sudo):
                             key = True
                             same_number = False
                             sudo[r][c] = sign_number
+                            legal_r[r][sign_number] = False
+                            legal_c[c][sign_number] = False
+                            legal_b[b][sign_number] = False
 
     def get_cache():
         keys = [[-1, -1, -1]]
@@ -101,17 +113,16 @@ def sudo_solve(sudo):
         for r in range(9):
             for c in range(9):
                 if not sudo[r][c]:
-                    keys.append([r, c, 3 * (r // 3) + c // 3])
-                    values.append([number for number in range(1, 10) if legal(number, r, c)])
+                    b = 3 * (r // 3) + c // 3
+                    keys.append([r, c, b])
+                    values.append([number for number in range(1, 10)
+                                   if (legal_r[r][number] and legal_c[c][number] and legal_b[b][number])])
         return keys, values
 
     # ———————————————————循环函数———————————————————
     def solve():
         coordinate = len(cache_keys) - 1
-        cache_times = [0]*len(cache_keys)
-        legal_r = [[True for _ in range(10)] for _ in range(9)]
-        legal_c = [[True for _ in range(10)] for _ in range(9)]
-        legal_b = [[True for _ in range(10)] for _ in range(9)]
+        cache_times = [0 for _ in range(len(cache_keys))]
         while coordinate:
             row, col, blo = cache_keys[coordinate]
             for value in cache_values[coordinate][cache_times[coordinate]:]:
@@ -132,9 +143,12 @@ def sudo_solve(sudo):
                 legal_c[col][number] = True
                 legal_b[blo][number] = True
 
+    time_start = time.time()
+    legal_r = [[True for _ in range(10)] for _ in range(9)]
+    legal_c = [[True for _ in range(10)] for _ in range(9)]
+    legal_b = [[True for _ in range(10)] for _ in range(9)]
     if not check():
         return False
-    time_start = time.time()
     fill()
     cache_keys, cache_values = get_cache()
     solve()
