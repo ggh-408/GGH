@@ -3,7 +3,6 @@ import time
 
 def sudo_solve(sudo):
     def check():
-        nonlocal legal_r, legal_c, legal_b
         for r in range(9):
             for c in range(9):
                 if sudo[r][c]:
