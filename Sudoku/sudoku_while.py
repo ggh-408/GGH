@@ -18,7 +18,6 @@ def sudo_solve(sudo):
 
     def fill():
         key = True
-        flag = False
         same_number = False
         sign_r, sign_c, sign_b = 0, 0, 0
         sign_number = 0
@@ -64,20 +63,18 @@ def sudo_solve(sudo):
                 for blo_r in range(0, 9, 3):
                     for blo_c in range(0, 9, 3):
                         for r in range(blo_r, blo_r + 3):
-                            for c in range(blo_c, blo_c + 3):
-                                b = 3 * (r // 3) + c // 3
-                                if sudo[r][c] == 0 and legal_r[r][number] and legal_c[c][number] and legal_b[b][number]:
-                                    if same_number:
-                                        same_number = False
-                                        flag = True
-                                        break
-                                    sign_r = r
-                                    sign_c = c
-                                    sign_b = b
-                                    same_number = True
-                            if flag:
-                                flag = False
-                                break
+                            if same_number:
+                                for c in range(blo_c, blo_c + 3):
+                                    b = 3 * (r // 3) + c // 3
+                                    if sudo[r][c] == 0 and \
+                                            legal_r[r][number] and legal_c[c][number] and legal_b[b][number]:
+                                        if same_number:
+                                            same_number = False
+                                            break
+                                        sign_r = r
+                                        sign_c = c
+                                        sign_b = b
+                                        same_number = True
                         if same_number:
                             key = True
                             same_number = False
