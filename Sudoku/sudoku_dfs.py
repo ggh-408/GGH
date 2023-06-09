@@ -113,7 +113,7 @@ def sudo_solve(sudo):
                     b = 3 * (r // 3) + c // 3
                     keys.append([r, c, b])
                     values.append([number for number in range(1, 10)
-                                   if (legal_r[r][number] and legal_c[c][number] and legal_b[b][number])])
+                                   if legal_r[r][number] and legal_c[c][number] and legal_b[b][number]])
         return keys, values
 
     # ———————————————————迭代函数———————————————————
