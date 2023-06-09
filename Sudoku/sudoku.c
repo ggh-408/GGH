@@ -60,9 +60,7 @@ bool Check(void)
             if (sudo[r][c]) {
                 b = 3 * (r / 3) + c / 3;
                 value = sudo[r][c];
-                sudo[r][c] = 0;
                 if (legalR[r][value] && legalC[c][value] && legalB[b][value]) {
-                    sudo[r][c] = value;
                     legalR[r][value] = false;
                     legalC[c][value] = false;
                     legalB[b][value] = false;
