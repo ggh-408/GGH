@@ -8,9 +8,7 @@ def sudo_solve(sudo):
                 if sudo[r][c] != 0:
                     b = 3 * (r // 3) + c // 3
                     value = sudo[r][c]
-                    sudo[r][c] = 0
                     if legal_r[r][value] and legal_c[c][value] and legal_b[b][value]:
-                        sudo[r][c] = value
                         legal_r[r][value] = False
                         legal_c[c][value] = False
                         legal_b[b][value] = False
