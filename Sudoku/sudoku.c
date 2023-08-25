@@ -219,8 +219,7 @@ bool Solve(void)
     int row = cacheKeys[coordinate][0];
     int col = cacheKeys[coordinate][1];
     int blo = cacheKeys[coordinate][2];
-    for (int i = 0; cacheValues[coordinate][i]; i++) {
-        int value = cacheValues[coordinate][i];
+    for (int i = 0, value = cacheValues[coordinate][0]; value; value = cacheValues[coordinate][++i]) {
         if (legalR[row][value] && legalC[col][value] && legalB[blo][value]) {
             legalR[row][value] = false;
             legalC[col][value] = false;
